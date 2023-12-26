@@ -6,6 +6,10 @@ return {
     config = function()
       local tokyonight = require("tokyonight")
       tokyonight.setup({
+        transparent = true,
+        styles = {
+          sidebars = "transparent",
+        },
         on_highlights = function(hl, colors)
           hl.CursorLineNr = {
             fg = colors.yellow
