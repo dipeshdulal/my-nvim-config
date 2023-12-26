@@ -1,6 +1,7 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
+  event = { "BufReadPre", "BufNewFile" },
   config = function()
     local configs = require("nvim-treesitter.configs")
 
@@ -8,7 +9,7 @@ return {
       ensure_installed = {
         "c", "lua", "javascript", "html",
         "go", "dart", "typescript", "python",
-        "dart"
+        "dart", "vimdoc", "vim",
       },
       highlight = { enable = true },
       indent = { enable = true },
