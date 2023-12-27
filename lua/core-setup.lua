@@ -19,3 +19,6 @@ opt.clipboard = "unnamedplus"
 
 -- highlight line 
 opt.cursorline = true
+
+-- exrc
+opt.exrc = true
