@@ -77,7 +77,11 @@ return {
       lsp_zero.on_attach(function(client, bufnr)
         -- see :help lsp-zero-keybindings
         -- to learn the available actions
-        lsp_zero.default_keymaps({buffer = bufnr})
+        local opts = { buffer = bufnr }
+        lsp_zero.default_keymaps(opts)
+
+        -- override defaults from lsp_zero
+        vim.keymap.set("n", "<leader>ca", '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
       end)
 
       require('mason-lspconfig').setup({
