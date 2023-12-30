@@ -105,10 +105,10 @@ return {
 
 
       -- dart server 
-      local lspconfig = require("lspconfig")
-      lspconfig.dartls.setup({
-        cmd = {"fvm", "dart", "language-server", "--protocol=lsp"},
-      })
+      -- local lspconfig = require("lspconfig")
+      -- lspconfig.dartls.setup({
+      --   cmd = {"fvm", "dart", "language-server", "--protocol=lsp"},
+      -- })
     end
   }
 }
