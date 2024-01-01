@@ -18,16 +18,16 @@ return {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
-      "hrsh7th/cmp-buffer", -- source for text in buffer
-      "hrsh7th/cmp-path", -- source for file system paths
-      "L3MON4D3/LuaSnip", -- snippet engine
-      "saadparwaiz1/cmp_luasnip", -- for autocompletion
+      "hrsh7th/cmp-buffer",           -- source for text in buffer
+      "hrsh7th/cmp-path",             -- source for file system paths
+      "L3MON4D3/LuaSnip",             -- snippet engine
+      "saadparwaiz1/cmp_luasnip",     -- for autocompletion
       "rafamadriz/friendly-snippets", -- useful snippets
     },
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
-      -- lspzero 
+      -- lspzero
       local lsp_zero = require('lsp-zero')
       lsp_zero.extend_cmp()
       -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
@@ -53,26 +53,39 @@ return {
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
-          ["<C-e>"] = cmp.mapping.abort(), -- close completion window
+          ["<C-e>"] = cmp.mapping.abort(),        -- close completion window
           ["<CR>"] = cmp.mapping.confirm({ select = false }),
         }),
         -- sources for autocompletion
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" }, -- snippets
-          { name = "buffer" }, -- text within current buffer
-          { name = "path" }, -- file system paths
+          { name = "buffer" },  -- text within current buffer
+          { name = "path" },    -- file system paths
         }),
       })
     end,
   },
   {
     'neovim/nvim-lspconfig',
-    cmd = {'LspInfo', 'LspInstall', 'LspStart'},
+    cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
-      {'hrsh7th/cmp-nvim-lsp'},
-      {'williamboman/mason-lspconfig.nvim'},
+      { 'hrsh7th/cmp-nvim-lsp' },
+      { 'williamboman/mason-lspconfig.nvim' },
+      {
+        "nvimtools/none-ls.nvim",
+        config = function()
+          local null_ls = require("null-ls")
+          null_ls.setup({
+            sources = {
+              null_ls.builtins.diagnostics.eslint_d,
+              null_ls.builtins.formatting.prettierd,
+              null_ls.builtins.code_actions.gitsigns,
+            },
+          })
+        end,
+      },
     },
     config = function()
       local lsp_zero = require('lsp-zero')
@@ -86,6 +99,21 @@ return {
 
         -- override defaults from lsp_zero
         vim.keymap.set("n", "<leader>ca", '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+
+        -- auto formatting if lsp supports it
+        local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+        if client.supports_method("textDocument/formatting") then
+          vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = augroup,
+            buffer = bufnr,
+            callback = function()
+              vim.lsp.buf.format({
+                bufnr = bufnr,
+              })
+            end,
+          })
+        end
       end)
 
       require('mason-lspconfig').setup({
@@ -106,13 +134,6 @@ return {
         },
         automatic_installation = true,
       })
-
-
-      -- dart server 
-      -- local lspconfig = require("lspconfig")
-      -- lspconfig.dartls.setup({
-      --   cmd = {"fvm", "dart", "language-server", "--protocol=lsp"},
-      -- })
     end
   }
 }

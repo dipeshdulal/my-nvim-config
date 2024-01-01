@@ -9,6 +9,10 @@ return {
   config = function()
     require("flutter-tools").setup({
       fvm = true,
+      debugger = {
+        enabled = true,
+        run_via_dap = true,
+      }
     })
   end
 }

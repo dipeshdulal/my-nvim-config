@@ -4,16 +4,21 @@ return {
     {
       "rcarriga/nvim-dap-ui",
       keys = {
-        { "<leader>du", function() require("dapui").toggle({}) end },
+        {
+          "<leader>du",
+          function()
+            require("dapui").toggle({})
+          end
+        },
       },
       opts = {},
       config = function(_, opts)
         local dap = require("dap")
         local dapui = require("dapui")
-
         dapui.setup(opts)
         dap.listeners.after.event_initialized["dapui_config"] = function()
           dapui.open({})
+          vim.cmd("Neotree close")
         end
 
         dap.listeners.before.event_terminated["dapui_config"] = function()
@@ -23,7 +28,6 @@ return {
         dap.listeners.before.event_exited["dapui_config"] = function()
           dapui.close({})
         end
-
       end
     },
     {
@@ -50,11 +54,11 @@ return {
   },
   keys = {
     { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
-    { "<leader>dc", function() require("dap").continue() end, desc = "Continue" },
-    { "<leader>do", function() require("dap").step_over() end, desc = "Step Over" },
-    { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
-    { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
-    { "<leader>dr", function() require("dap").repl.open() end, desc = "Repl" },
+    { "<leader>dc", function() require("dap").continue() end,          desc = "Continue" },
+    { "<leader>do", function() require("dap").step_over() end,         desc = "Step Over" },
+    { "<leader>di", function() require("dap").step_into() end,         desc = "Step Into" },
+    { "<leader>dw", function() require("dap.ui.widgets").hover() end,  desc = "Widgets" },
+    { "<leader>dr", function() require("dap").repl.open() end,         desc = "Repl" },
   },
   config = function()
     local dap = require("dap")
@@ -71,7 +75,7 @@ return {
         request = "attach",
         port = 5002,
         mode = "remote",
-        cwd= vim.fn.getcwd(),
+        cwd = vim.fn.getcwd(),
       }
     }
     print(dap)

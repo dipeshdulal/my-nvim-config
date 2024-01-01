@@ -3,9 +3,10 @@ local opt = vim.opt
 -- leader key --
 vim.g.mapleader = " "
 
--- options -- 
+-- options --
 opt.expandtab = true
 opt.shiftwidth = 2
+opt.tabstop = 2
 opt.smartindent = true
 
 opt.fillchars = { eob = " " }
@@ -17,7 +18,7 @@ opt.relativenumber = true
 -- use clipboard register --
 opt.clipboard = "unnamedplus"
 
--- highlight line 
+-- highlight line
 opt.cursorline = true
 
 -- exrc
