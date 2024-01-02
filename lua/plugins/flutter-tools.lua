@@ -14,5 +14,6 @@ return {
         run_via_dap = true,
       }
     })
+    require('dap').defaults.dart.exception_breakpoints = {}
   end
 }
