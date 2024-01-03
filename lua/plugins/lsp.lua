@@ -5,7 +5,7 @@ return {
     lazy = true,
     config = false,
     init = function()
-      vim.g.lsp_zero_extend_cmp = 0
+      vim.g.lsp_zero_emxtend_cmp = 0
       vim.g.lsp_zero_extend_lspconfig = 0
     end,
   },
@@ -79,7 +79,7 @@ return {
           local null_ls = require("null-ls")
           null_ls.setup({
             sources = {
-              null_ls.builtins.diagnostics.eslint_d,
+              null_ls.builtins.diagnostics.eslint,
               null_ls.builtins.formatting.prettierd,
               null_ls.builtins.code_actions.gitsigns,
             },
@@ -99,21 +99,10 @@ return {
 
         -- override defaults from lsp_zero
         vim.keymap.set("n", "<leader>ca", '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-
-        -- auto formatting if lsp supports it
-        local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-        if client.supports_method("textDocument/formatting") then
-          vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format({
-                bufnr = bufnr,
-              })
-            end,
-          })
-        end
+        -- code formatting
+        vim.keymap.set("n", "<leader>mp", function()
+          vim.lsp.buf.format({bufnr = bufnr})
+        end)
       end)
 
       require('mason-lspconfig').setup({
