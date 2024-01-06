@@ -32,7 +32,6 @@ return {
       lsp_zero.extend_cmp()
       -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
       require("luasnip.loaders.from_vscode").lazy_load()
-
       cmp.setup({
         formatting = lsp_zero.cmp_format(),
         completion = {
@@ -80,7 +79,7 @@ return {
           null_ls.setup({
             sources = {
               null_ls.builtins.diagnostics.eslint,
-              null_ls.builtins.formatting.prettierd,
+              null_ls.builtins.formatting.prettier,
               null_ls.builtins.code_actions.gitsigns,
             },
           })
@@ -92,6 +91,7 @@ return {
       lsp_zero.extend_lspconfig()
 
       lsp_zero.on_attach(function(client, bufnr)
+
         -- see :help lsp-zero-keybindings
         -- to learn the available actions
         local opts = { buffer = bufnr }
