@@ -6,6 +6,11 @@ return {
     "MunifTanjim/nui.nvim",
     "nvim-tree/nvim-web-devicons",
   },
+  keys = {
+    {
+      '<C-n>', "<cmd>Neotree toggle position=left <CR>", desc="toggle neotree"
+    },
+  },
   config = function()
     local neotree = require("neo-tree")
     neotree.setup({
@@ -17,8 +22,5 @@ return {
         }
       }
     })
-
-
-    vim.keymap.set("n", "<C-n>", "<cmd>Neotree toggle position=left <CR>")
   end
 }
