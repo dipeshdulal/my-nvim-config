@@ -101,7 +101,7 @@ return {
         vim.keymap.set("n", "<leader>ca", '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
         -- code formatting
         vim.keymap.set("n", "<leader>mp", function()
-          vim.lsp.buf.format({bufnr = bufnr})
+          vim.lsp.buf.format({})
         end)
       end)
 
