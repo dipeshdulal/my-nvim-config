@@ -1,11 +1,11 @@
-## Configuration for my nvim setup 
+## Configuration for my nvim setup
 
 ```
 git clone https://github.com/dipeshdulal/my-nvim-config ~/.config/nvim
 ```
 
-
 ## Sessionizer
+
 ```bash
 #!/bin/bash
 
@@ -32,10 +32,22 @@ if ! tmux has-session -t=$selected_name 2> /dev/null; then
 fi
 
 # if outside just attach
-if [[ -z $TMUX ]]; then 
+if [[ -z $TMUX ]]; then
   tmux attach -t $selected_name
   exit 0
 fi
 
 tmux switch-client -t $selected_name
+```
+
+## Alacritty Setup
+
+```toml
+[window]
+decorations = "Buttonless"
+padding = { y = 5 }
+
+[font]
+normal = { family = "Hack Nerd Font" }
+size = 12
 ```
