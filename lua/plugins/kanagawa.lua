@@ -1,26 +1,24 @@
 return {
   {
-    "folke/tokyonight.nvim",
+    "rebelot/kanagawa.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      local tokyonight = require("tokyonight")
-      tokyonight.setup({
+      local kanagawa = require("kanagawa")
+      kanagawa.setup({
         transparent = true,
-        styles = {
-          sidebars = "transparent",
-        },
-        on_highlights = function(hl, colors)
-          hl.CursorLineNr = {
-            fg = colors.yellow
+        colors = {
+          theme = {
+            all = {
+              ui = {
+                bg_gutter = "none"
+              }
+            }
           }
-          hl.LineNr = {
-            fg = "#b8910f"
-          }
-        end
+        }
       })
       vim.opt.termguicolors = true
-      vim.cmd.colorscheme("tokyonight")
+      vim.cmd.colorscheme("kanagawa-wave")
     end
   },
   {
