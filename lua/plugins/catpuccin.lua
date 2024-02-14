@@ -16,11 +16,7 @@ return {
     lazy = false,
     config = function()
       local lualine = require("lualine")
-      lualine.setup({
-        options = {
-          theme = "kanagawa"
-        }
-      })
+      lualine.setup({})
     end
   },
 }
