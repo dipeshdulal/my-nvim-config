@@ -1,15 +1,5 @@
 return {
   {
-    'VonHeikemen/lsp-zero.nvim',
-    branch = 'v3.x',
-    lazy = true,
-    config = false,
-    init = function()
-      vim.g.lsp_zero_emxtend_cmp = 0
-      vim.g.lsp_zero_extend_lspconfig = 0
-    end,
-  },
-  {
     'williamboman/mason.nvim',
     lazy = false,
     config = true,
@@ -27,13 +17,11 @@ return {
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
-      -- lspzero
-      local lsp_zero = require('lsp-zero')
-      lsp_zero.extend_cmp()
+
       -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
       require("luasnip.loaders.from_vscode").lazy_load()
+
       cmp.setup({
-        formatting = lsp_zero.cmp_format(),
         completion = {
           completeopt = "menu,menuone,preview,noselect",
         },
@@ -47,14 +35,15 @@ return {
           documentation = cmp.config.window.bordered()
         },
         mapping = cmp.mapping.preset.insert({
-          ["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
-          ["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
+          ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = 'select' }), -- previous suggestion
+          ["<C-j>"] = cmp.mapping.select_next_item({ behavior = 'select' }), -- next suggestion
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
           ["<C-e>"] = cmp.mapping.abort(),        -- close completion window
           ["<CR>"] = cmp.mapping.confirm({ select = false }),
         }),
+
         -- sources for autocompletion
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
@@ -87,23 +76,44 @@ return {
       },
     },
     config = function()
-      local lsp_zero = require('lsp-zero')
-      lsp_zero.extend_lspconfig()
+      -- lsp keybindings
+      vim.api.nvim_create_autocmd('LspAttach', {
+        desc = 'LSP actions',
+        callback = function(event)
+          local opts = { buffer = event.buf }
 
-      lsp_zero.on_attach(function(client, bufnr)
+          -- these will be buffer-local keybindings
+          -- because they only work if you have an active language server
 
-        -- see :help lsp-zero-keybindings
-        -- to learn the available actions
-        local opts = { buffer = bufnr }
-        lsp_zero.default_keymaps(opts)
+          vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+          vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+          vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+          vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
+          vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
+          vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+          vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+          vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+          vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+          vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
 
-        -- override defaults from lsp_zero
-        vim.keymap.set("n", "<leader>ca", '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-        -- code formatting
-        vim.keymap.set("n", "<leader>mp", function()
-          vim.lsp.buf.format({})
-        end)
-      end)
+          -- override defaults from lsp_zero
+          vim.keymap.set("n", "<leader>ca", '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+          -- code formatting
+          vim.keymap.set("n", "<leader>mp", function()
+            vim.lsp.buf.format({})
+          end)
+        end
+      })
+
+      -- hover borders
+      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+
+      local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+      local default_setup = function(server)
+        require('lspconfig')[server].setup({
+          capabilities = lsp_capabilities,
+        })
+      end
 
       require('mason-lspconfig').setup({
         ensure_installed = {
@@ -111,15 +121,27 @@ return {
           "tsserver",
           "html",
           "tailwindcss",
-          "pyright",
+          "pyright"
         },
         handlers = {
-          lsp_zero.default_setup,
+          default_setup,
           lua_ls = function()
-            -- manually configure lua ls
-            local lua_opts = lsp_zero.nvim_lua_ls()
-            require("lspconfig").lua_ls.setup(lua_opts)
-          end
+            require('lspconfig').lua_ls.setup({
+              settings = {
+                Lua = {
+                  diagnostics = {
+                    globals = { "vim" },
+                  },
+                  workspace = {
+                    library = {
+                      [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                      [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                    },
+                  },
+                },
+              },
+            })
+          end,
         },
         automatic_installation = true,
       })
