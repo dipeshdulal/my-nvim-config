@@ -51,3 +51,32 @@ padding = { y = 5 }
 normal = { family = "Hack Nerd Font" }
 size = 12
 ```
+
+
+## Tmux Setup `~/.tmux.conf` 
+```
+set -g mouse on
+unbind '"'
+unbind %
+
+bind | split-window -h
+bind - split-window -v
+
+# Set hyperlinks
+set -ga terminal-features "*:hyperlinks"
+
+# Vi mode
+setw -g mode-keys vi
+
+# List of plugins
+set -g @plugin 'catppuccin/tmux'
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'christoomey/vim-tmux-navigator'
+
+set -g @catppuccin_flavour 'latte'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
+
+```
