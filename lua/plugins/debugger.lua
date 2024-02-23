@@ -80,6 +80,5 @@ return {
         cwd = vim.fn.getcwd(),
       }
     }
-    print(dap)
   end
 }
