@@ -62,6 +62,8 @@ unbind %
 bind | split-window -h
 bind - split-window -v
 
+bind r source-file ~/.tmux.conf \; display-message "Config reloaded..."
+
 # Set hyperlinks
 set -ga terminal-features "*:hyperlinks"
 
@@ -69,12 +71,18 @@ set -ga terminal-features "*:hyperlinks"
 setw -g mode-keys vi
 
 # List of plugins
-set -g @plugin 'catppuccin/tmux'
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'christoomey/vim-tmux-navigator'
+set -g @plugin 'catppuccin/tmux'
 
-set -g @catppuccin_flavour 'latte'
+set -g @catppuccin_window_left_separator ""
+set -g @catppuccin_window_right_separator " "
+set -g @catppuccin_window_middle_separator " █"
+set -g @catppuccin_window_number_position "right"
+
+set -g @catppuccin_flavour 'macchiato'
+set -g @catppuccin_status_modules_right "application session"
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
