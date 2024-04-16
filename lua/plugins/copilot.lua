@@ -1,3 +1,6 @@
 return {
-  "github/copilot.vim"
+  "github/copilot.vim",
+  config = function()
+    vim.cmd[[Copilot disable]]
+  end
 }
