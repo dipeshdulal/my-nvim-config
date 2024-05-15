@@ -16,13 +16,5 @@ return {
         'fugitive',
       },
     })
-
-    vim.keymap.set("n", "<leader>jj", function()
-      illuminate.goto_next_reference()
-    end)
-
-    vim.keymap.set("n", "<leader>kk", function()
-      illuminate.goto_prev_reference()
-    end)
   end
 }
