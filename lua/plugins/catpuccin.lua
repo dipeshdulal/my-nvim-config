@@ -6,7 +6,9 @@ return {
     priority = 1000,
     config = function()
       local catpuccin = require("catppuccin")
-      catpuccin.setup({})
+      catpuccin.setup({
+        transparent_background = true
+      })
       vim.opt.termguicolors = true
       vim.cmd.colorscheme("catppuccin")
     end
