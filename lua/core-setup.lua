@@ -28,3 +28,6 @@ opt.cursorline = true
 -- exrc
 opt.exrc = true
 
+-- netrw shortcut
+vim.keymap.set("n", '<C-n>', '<esc><cmd>Explore<cr>')
+vim.keymap.set("i", '<C-n>', '<esc><cmd>Explore<cr>')
