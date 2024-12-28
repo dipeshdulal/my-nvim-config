@@ -20,4 +20,3 @@ opt.cursorline = true
 
 -- exrc
 opt.exrc = true
-

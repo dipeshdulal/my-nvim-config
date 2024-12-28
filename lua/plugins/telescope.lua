@@ -1,14 +1,19 @@
 return {
-  "MunifTanjim/nui.nvim",
   'nvim-telescope/telescope.nvim',
-  tag = '0.1.5',
   dependencies = {
+    "MunifTanjim/nui.nvim",
     'nvim-lua/plenary.nvim',
-    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     {
       "nvim-telescope/telescope-ui-select.nvim",
       opts = {},
     }
+  },
+  keys = {
+    { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "find files" },
+    { "<leader>fg", "<cmd>Telescope live_grep<cr>",  desc = "live grep" },
+    { "<leader>fb", "<cmd>Telescope buffers<cr>",    desc = "find buffers" },
+    { "<leader>fh", "<cmd>Telescope help_tags<cr>",  desc = "find help tags" },
   },
   config = function()
     local telescope = require("telescope")
@@ -16,6 +21,12 @@ return {
 
     telescope.setup({
       extensions = {
+        fzf = {
+          fuzzy = true,
+          override_generic_sorter = true,
+          override_file_sorter = true,
+          case_mode = "smart_case",
+        },
         ["ui-select"] = {
           require("telescope.themes").get_dropdown {}
         }
@@ -30,14 +41,8 @@ return {
       }
     })
 
+
     telescope.load_extension("fzf")
     telescope.load_extension("ui-select")
-
-    local builtin = require("telescope.builtin")
-    local k = vim.keymap
-    k.set("n", "<leader>ff", builtin.find_files, {})
-    k.set("n", "<leader>fg", builtin.live_grep, {})
-    k.set("n", "<leader>fb", builtin.buffers, {})
-    k.set("n", "<leader>fh", builtin.help_tags, {})
   end
 }

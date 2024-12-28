@@ -134,7 +134,7 @@ return {
       require('mason-lspconfig').setup({
         ensure_installed = {
           "gopls",
-          "tsserver",
+          "ts_ls",
           "html",
           "tailwindcss",
           "pyright"
