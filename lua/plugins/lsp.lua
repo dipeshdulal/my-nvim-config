@@ -5,73 +5,50 @@ return {
     config = true,
   },
   {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    dependencies = {
-      "hrsh7th/cmp-buffer",           -- source for text in buffer
-      "hrsh7th/cmp-path",             -- source for file system paths
-      "L3MON4D3/LuaSnip",             -- snippet engine
-      "saadparwaiz1/cmp_luasnip",     -- for autocompletion
-      "rafamadriz/friendly-snippets", -- useful snippets
-      "onsails/lspkind-nvim",         -- adds icons to completion items
-    },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-      local lspkind = require("lspkind")
-
-      -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
-      require("luasnip.loaders.from_vscode").lazy_load()
-      cmp.setup({
-        completion = {
-          completeopt = "menu,menuone,preview,noselect",
-        },
-        snippet = { -- configure how nvim-cmp interacts with snippet engine
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
+    'saghen/blink.cmp',
+    dependencies = 'rafamadriz/friendly-snippets',
+    version = '*',
+    opts = {
+      keymap = {
+        preset = 'default',
+        ["<C-Space>"] = { 'show', 'fallback' },
+        ["<C-k>"] = { 'select_prev', 'fallback' }, -- previous suggestion
+        ["<C-j>"] = { 'select_next', 'fallback' }, -- next suggestion
+        ["<CR>"] = { 'accept', 'fallback' },
+      },
+      sources = {
+        cmdline = {}, -- disable command line completions
+      },
+      signature = {
+        enabled = true,
         window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered()
+          border = "rounded"
+        }
+      },
+      completion = {
+        documentation = {
+          auto_show = true,
+          window = {
+            border = "rounded",
+          },
+          auto_show_delay_ms = 500,
         },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = 'select' }), -- previous suggestion
-          ["<C-j>"] = cmp.mapping.select_next_item({ behavior = 'select' }), -- next suggestion
-          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
-          ["<C-e>"] = cmp.mapping.abort(),        -- close completion window
-          ["<CR>"] = cmp.mapping.confirm({ select = false }),
-        }),
-
-        -- sources for autocompletion
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" }, -- snippets
-          { name = "buffer" },  -- text within current buffer
-          { name = "path" },    -- file system paths
-        }),
-        formatting = {
-          format = lspkind.cmp_format({
-            mode = 'symbol_text',
-            menu = ({
-              buffer = "[Buffer]",
-              nvim_lsp = "[LSP]",
-              luasnip = "[Snippet]",
-              path = "[Path]",
-            }),
-          }),
+        menu = {
+          border = "rounded",
         },
-      })
-    end,
+      },
+      appearance = {
+        use_nvim_cmp_as_default = true,
+        nerd_font_variant = 'mono'
+      },
+    },
   },
   {
     'neovim/nvim-lspconfig',
     cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
-      { 'hrsh7th/cmp-nvim-lsp' },
+      { 'saghen/blink.cmp' },
       { 'williamboman/mason-lspconfig.nvim' },
       {
         "nvimtools/none-ls.nvim",
@@ -82,7 +59,7 @@ return {
               null_ls.builtins.diagnostics.eslint,
               null_ls.builtins.formatting.prettier,
               null_ls.builtins.code_actions.gitsigns,
-              null_ls.builtins.formatting.black.with({ extra_args = { "--fast" }}),
+              null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
             },
           })
         end,
@@ -124,7 +101,7 @@ return {
       -- hover borders
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
-      local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+      local lsp_capabilities = require('blink.cmp').get_lsp_capabilities()
       local default_setup = function(server)
         require('lspconfig')[server].setup({
           capabilities = lsp_capabilities,
