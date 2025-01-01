@@ -7,7 +7,12 @@ return {
     config = function()
       local catpuccin = require("catppuccin")
       catpuccin.setup({
-        transparent_background = true
+        transparent_background = true,
+        custom_highlights = function(colors)
+          return {
+            WinSeparator = { fg = colors.flamingo }
+          }
+        end
       })
       vim.opt.termguicolors = true
       vim.cmd.colorscheme("catppuccin")
