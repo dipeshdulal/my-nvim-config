@@ -23,7 +23,17 @@ return {
     lazy = false,
     config = function()
       local lualine = require("lualine")
-      lualine.setup({})
+      lualine.setup({
+        extensions = { "oil" },
+        sections = {
+          lualine_c = {
+            {
+              'filename',
+              path = 1,
+            }
+          }
+        }
+      })
     end
   },
 }
