@@ -16,8 +16,8 @@ return {
         ["<C-j>"] = { 'select_next', 'fallback' }, -- next suggestion
         ["<CR>"] = { 'accept', 'fallback' },
       },
-      sources = {
-        cmdline = {}, -- disable command line completions
+      cmdline = {
+        sources = {},
       },
       signature = {
         enabled = true,
