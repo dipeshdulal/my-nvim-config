@@ -17,7 +17,11 @@ return {
         ["<CR>"] = { 'accept', 'fallback' },
       },
       cmdline = {
-        sources = {},
+        completion = {
+          menu = {
+            auto_show = false,
+          }
+        }
       },
       signature = {
         enabled = true,
@@ -38,7 +42,6 @@ return {
         },
       },
       appearance = {
-        use_nvim_cmp_as_default = true,
         nerd_font_variant = 'mono'
       },
     },
@@ -78,7 +81,13 @@ return {
           -- these will be buffer-local keybindings
           -- because they only work if you have an active language server
 
-          vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+          vim.keymap.set('n', 'K', function()
+            vim.lsp.buf.hover({
+              border = 'rounded',
+            })
+          end, opts)
+
+          -- '<cmd>lua vim.lsp.buf.hover({config = {border="rounded"}})<cr>', opts)
           vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
           vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
           vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
@@ -101,15 +110,27 @@ return {
         end
       })
 
-      -- hover borders
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+      vim.lsp.config('lua_ls', {
+        settings = {
+          Lua = {
+            runtime = {
+              version = 'LuaJIT',
+            },
+            diagnostics = {
+              globals = {
+                'vim',
+              }
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+            }
+          }
+        }
+      })
 
-      local lsp_capabilities = require('blink.cmp').get_lsp_capabilities()
-      local default_setup = function(server)
-        require('lspconfig')[server].setup({
-          capabilities = lsp_capabilities,
-        })
-      end
+      -- disable invalid server name issue for now, provide empty table as configuration
+      vim.lsp.config('null-ls', {})
+      vim.lsp.config('GitHub Copilot', {})
 
       require('mason-lspconfig').setup({
         ensure_installed = {
@@ -117,30 +138,11 @@ return {
           "ts_ls",
           "html",
           "tailwindcss",
-          "pyright"
+          "pyright",
+          "lua_ls"
         },
-        handlers = {
-          default_setup,
-          lua_ls = function()
-            require('lspconfig').lua_ls.setup({
-              settings = {
-                Lua = {
-                  diagnostics = {
-                    globals = { "vim" },
-                  },
-                  workspace = {
-                    library = {
-                      [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                      [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                    },
-                  },
-                },
-              },
-            })
-          end,
-        },
-        automatic_installation = true,
       })
     end
   }
+      vim.lsp.config('Github Copilot', {})
 }
