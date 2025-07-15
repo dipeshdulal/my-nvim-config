@@ -144,5 +144,4 @@ return {
       })
     end
   }
-      vim.lsp.config('Github Copilot', {})
 }
